@@ -36,7 +36,7 @@ export default {
 
       if (versionLocal === versionFirebase && sounds) {
         console.log('Using Local Storage.');
-        this.audios = _.sortBy(this.audios, ['playedTimes']).reverse();
+        this.audios = _.sortBy(sounds, ['playedTimes']).reverse();
         return;
       }
 
@@ -47,8 +47,8 @@ export default {
         displayName: doc.data().displayName,
         playedTimes: doc.data().playedTimes,
       }));
-      this.audios = _.sortBy(this.audios, ['playedTimes']).reverse();
       LocalStorageService.saveSounds(this.audios);
+      this.audios = _.sortBy(this.audios, ['playedTimes']).reverse();
       console.log('Using Firebase.');
     },
     onType(filterValue) {
