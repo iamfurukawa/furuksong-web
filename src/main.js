@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import './registerServiceWorker';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
