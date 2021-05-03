@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: '/furuksong/',
+  publicPath: '/furuksong-web/',
 };
