@@ -1,7 +1,13 @@
 <template>
-  <div class="card" @click="() => handleClick(this.uuid)">
-    <font-awesome-icon icon="music" class="icon" />
-    <h3>{{ this.displayName }}</h3>
+  <div
+    class="card"
+    @click="() => handleClick(this.uuid)"
+  >
+    <font-awesome-icon
+      icon="music"
+      class="icon"
+    />
+    <h3>{{ this.displayName.substring(0,50) }}...</h3>
   </div>
 </template>
 
@@ -24,9 +30,8 @@ export default {
   display: flex;
   align-items: center;
 
-  width: 300%;
   height: 100px;
-  max-width: 400px;
+  width: 250px;
 
   cursor: pointer;
   margin: 10px;
