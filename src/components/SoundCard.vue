@@ -7,7 +7,7 @@
       icon="music"
       class="icon"
     />
-    <h3>{{ this.displayName.substring(0,50) }}...</h3>
+    <h3>{{ this.displayName.substring(0,50) }} {{this.displayName.length > 50 ? '...' : ''}}</h3>
   </div>
 </template>
 
