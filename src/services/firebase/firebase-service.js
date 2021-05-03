@@ -13,7 +13,11 @@ const FirebaseService = () => {
   });
 
   const app = () => {
-    if (!firebase.apps.length) return firebase.initializeApp(firebaseConfig(), { databaseURL: 'https://furuksong-default-rtdb.firebaseio.com/' });
+    if (!firebase.apps.length) {
+      return firebase.initializeApp(firebaseConfig(), {
+        databaseURL: 'https://furuksong-default-rtdb.firebaseio.com/',
+      });
+    }
     return firebase.app();
   };
 

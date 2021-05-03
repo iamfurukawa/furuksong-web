@@ -17,11 +17,14 @@ const FirebaseFirestoreService = () => {
 
   const remove = async (collection, key) => init().collection(collection).doc(key).delete();
 
+  const version = async () => init().collection('version').get();
+
   return {
     save,
     get,
     update,
     remove,
+    version,
   };
 };
 

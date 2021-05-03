@@ -15,6 +15,7 @@ import SearchBar from './components/SearchBar.vue';
 import ListViewSound from './components/ListViewSound.vue';
 
 import FirebaseFirestoreService from './services/firebase/firebase-firestore-service';
+import LocalStorageService from './services/local-storage/local-storage-service';
 
 export default {
   name: 'App',
@@ -26,13 +27,29 @@ export default {
   data: () => ({ audios: [], filterValue: '' }),
   methods: {
     async getAudios() {
-      const sounds = await FirebaseFirestoreService.get();
+      const versionLocal = LocalStorageService.getVersion();
+      const versionFirebase = (await FirebaseFirestoreService.version()).docs[0].id;
+      let sounds = LocalStorageService.getSounds();
+
+      console.log(`Actual Version: ${versionFirebase}`);
+      console.log(`Local Version: ${versionLocal}`);
+
+      if (versionLocal === versionFirebase && sounds) {
+        console.log('Using Local Storage.');
+        this.audios = _.sortBy(this.audios, ['playedTimes']).reverse();
+        return;
+      }
+
+      LocalStorageService.saveVersion(versionFirebase);
+      sounds = await FirebaseFirestoreService.get();
       this.audios = sounds.docs.map((doc) => ({
         uuid: doc.id,
         displayName: doc.data().displayName,
         playedTimes: doc.data().playedTimes,
       }));
       this.audios = _.sortBy(this.audios, ['playedTimes']).reverse();
+      LocalStorageService.saveSounds(this.audios);
+      console.log('Using Firebase.');
     },
     onType(filterValue) {
       this.filterValue = filterValue;

@@ -3,8 +3,10 @@ module.exports = {
   env: {
     node: true,
   },
+  plugins: ['es-beautifier'],
   extends: [
     'plugin:vue/essential',
+    'plugin:es-beautifier/standard',
     '@vue/airbnb',
   ],
   parserOptions: {
