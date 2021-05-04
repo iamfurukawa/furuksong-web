@@ -1,10 +1,14 @@
 <template>
   <div class="listViewSound">
     <SoundCard
-      v-for="audio in audios.filter((audio) => audio.displayName.includes(filterValue))"
+      v-for="audio in audios.filter((audio) =>
+        audio.displayName.includes(filterValue) &&
+        (tagSelected === 'todos' || audio.tags.includes(tagSelected))
+      )"
       :key="audio.uuid"
       :displayName="audio.displayName"
       :uuid="audio.uuid"
+      :tags="audio.tags"
     />
   </div>
 </template>
@@ -17,7 +21,7 @@ export default {
   components: {
     SoundCard,
   },
-  props: ['audios', 'filterValue'],
+  props: ['audios', 'filterValue', 'tagSelected'],
 };
 </script>
 

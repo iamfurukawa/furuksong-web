@@ -1,8 +1,16 @@
 <template>
   <div class="content">
     <Header />
-    <SearchBar @onType="onType" />
-    <ListViewSound :audios="audios" :filterValue="filterValue"/>
+    <SearchBar
+      @onType="onType"
+      @selectTag="selectTag"
+      :selectOptions="selectOptions"
+    />
+    <ListViewSound
+      :audios="audios"
+      :filterValue="filterValue"
+      :tagSelected="tagSelected"
+    />
 
   </div>
 </template>
@@ -24,11 +32,17 @@ export default {
     SearchBar,
     ListViewSound,
   },
-  data: () => ({ audios: [], filterValue: '' }),
+  data: () => ({
+    audios: [],
+    filterValue: '',
+    selectOptions: '',
+    tagSelected: 'todos',
+  }),
   methods: {
     async getAudios() {
       const versionLocal = LocalStorageService.getVersion();
-      const versionFirebase = (await FirebaseFirestoreService.version()).docs[0].id;
+      const versionFirebase = (await FirebaseFirestoreService.version()).docs[0]
+        .id;
       let sounds = LocalStorageService.getSounds();
 
       console.log(`Actual Version: ${versionFirebase}`);
@@ -42,11 +56,16 @@ export default {
 
       LocalStorageService.saveVersion(versionFirebase);
       sounds = await FirebaseFirestoreService.get();
-      this.audios = sounds.docs.map((doc) => ({
-        uuid: doc.id,
-        displayName: doc.data().displayName,
-        playedTimes: doc.data().playedTimes,
-      }));
+      this.audios = sounds.docs.map((doc) => {
+        const splitted = doc.data().displayName.replaceAll('[', '').split(']');
+        const tags = splitted.map((e) => e.trim());
+        return {
+          uuid: doc.id,
+          displayName: tags.pop(),
+          playedTimes: doc.data().playedTimes,
+          tags,
+        };
+      });
       LocalStorageService.saveSounds(this.audios);
       this.audios = _.sortBy(this.audios, ['playedTimes']).reverse();
       console.log('Using Firebase.');
@@ -54,9 +73,18 @@ export default {
     onType(filterValue) {
       this.filterValue = filterValue;
     },
+    selectTag(tag) {
+      this.tagSelected = tag;
+    },
   },
   async created() {
     await this.getAudios();
+
+    const tags = [];
+    this.audios.forEach((audio) => {
+      tags.push(...audio.tags);
+    });
+    this.selectOptions = _.uniq(tags);
   },
 };
 </script>

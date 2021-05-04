@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faMusic } from '@fortawesome/free-solid-svg-icons';
+import { faMusic, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import App from './App.vue';
 
 library.add(faMusic);
+library.add(faStar);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
