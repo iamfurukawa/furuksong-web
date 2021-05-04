@@ -82,8 +82,12 @@ export default {
   async created() {
     await this.getAudios();
 
+    const likes = LocalStorageService.getLikes();
     const tags = [];
     this.audios.forEach((audio) => {
+      audio.tags = likes.includes(audio.uuid)
+        ? [...audio.tags, 'Like']
+        : audio.tags;
       tags.push(...audio.tags);
     });
     this.selectOptions = _.uniq(tags);

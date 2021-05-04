@@ -1,7 +1,6 @@
 <template>
   <div
     class="card"
-    @click="() => handleClick(this.uuid)"
     @click="() => handleClick(this.uuid, this.ip)"
   >
     <font-awesome-icon
@@ -12,7 +11,8 @@
     <div class="bottomBar">
       <font-awesome-icon
         icon="star"
-        class="star-gray"
+        :class="getStarStyle(tags)"
+        @click="like(tags, uuid)"
       />
       <span
         class="tag"
@@ -25,17 +25,26 @@
 
 <script>
 import FirebaseRealtimeService from '../services/firebase/firebase-realtime-service';
+import LocalStorageService from '../services/local-storage/local-storage-service';
 
 export default {
   name: 'SoundCard',
-  props: ['displayName', 'uuid', 'tags'],
   props: ['displayName', 'uuid', 'tags', 'ip'],
   methods: {
-    handleClick: async (uuid) => {
-      await FirebaseRealtimeService.update('RequestSoundMonitoring', uuid);
     handleClick: async (uuid, ip) => {
       await FirebaseRealtimeService.update('RequestSoundMonitoring', uuid, ip);
     },
+    getStarStyle: (tags) => (tags.includes('Like') ? 'star-gold' : 'star-gray'),
+    like: (tags, uuid) => (tags.includes('Like') ? this.removeLike(uuid) : this.setLike(uuid)),
+    setLike: (uuid) => {
+      console.log('set like');
+      const likes = LocalStorageService.getLikes();
+      LocalStorageService.saveLikes([...likes, uuid]);
+    },
+    removeLike: (uuid) => {
+      console.log('removing like');
+      const likes = LocalStorageService.getLikes();
+      LocalStorageService.saveLikes(likes.filter((like) => like !== uuid));
     },
   },
 };
@@ -87,7 +96,7 @@ export default {
       align-items: center;
       display: inline-flex;
       justify-content: center;
-      background-color: #F04043;
+      background-color: #f04043;
 
       font-family: 'Montserrat', sans-serif;
       font-size: 0.75rem;

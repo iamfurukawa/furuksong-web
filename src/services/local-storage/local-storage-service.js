@@ -13,11 +13,23 @@ const LocalStorageService = () => {
     return soundsStr ? JSON.parse(soundsStr).sounds : null;
   };
 
+  const saveLikes = (likes) => {
+    const likesStr = JSON.stringify({ likes });
+    localStorage.setItem('likes', likesStr);
+  };
+
+  const getLikes = () => {
+    const likesStr = localStorage.getItem('likes');
+    return likesStr ? JSON.parse(likesStr).likes : null;
+  };
+
   return {
     saveVersion,
     getVersion,
     saveSounds,
     getSounds,
+    saveLikes,
+    getLikes,
   };
 };
 
