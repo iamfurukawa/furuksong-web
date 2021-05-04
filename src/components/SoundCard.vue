@@ -2,6 +2,7 @@
   <div
     class="card"
     @click="() => handleClick(this.uuid)"
+    @click="() => handleClick(this.uuid, this.ip)"
   >
     <font-awesome-icon
       icon="music"
@@ -28,9 +29,13 @@ import FirebaseRealtimeService from '../services/firebase/firebase-realtime-serv
 export default {
   name: 'SoundCard',
   props: ['displayName', 'uuid', 'tags'],
+  props: ['displayName', 'uuid', 'tags', 'ip'],
   methods: {
     handleClick: async (uuid) => {
       await FirebaseRealtimeService.update('RequestSoundMonitoring', uuid);
+    handleClick: async (uuid, ip) => {
+      await FirebaseRealtimeService.update('RequestSoundMonitoring', uuid, ip);
+    },
     },
   },
 };

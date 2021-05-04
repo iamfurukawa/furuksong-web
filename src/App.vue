@@ -10,6 +10,7 @@
       :audios="audios"
       :filterValue="filterValue"
       :tagSelected="tagSelected"
+      :ip="ip"
     />
 
   </div>
@@ -37,6 +38,7 @@ export default {
     filterValue: '',
     selectOptions: '',
     tagSelected: 'todos',
+    ip: '',
   }),
   methods: {
     async getAudios() {
@@ -85,6 +87,10 @@ export default {
       tags.push(...audio.tags);
     });
     this.selectOptions = _.uniq(tags);
+
+    this.ip = (
+      await fetch('https://api.ipify.org?format=json').then((x) => x.json())
+    ).ip;
   },
 };
 </script>

@@ -9,6 +9,7 @@
       :displayName="audio.displayName"
       :uuid="audio.uuid"
       :tags="audio.tags"
+      :ip="ip"
     />
   </div>
 </template>
@@ -21,7 +22,7 @@ export default {
   components: {
     SoundCard,
   },
-  props: ['audios', 'filterValue', 'tagSelected'],
+  props: ['audios', 'filterValue', 'tagSelected', 'ip'],
 };
 </script>
 
