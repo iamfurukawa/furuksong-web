@@ -1,19 +1,24 @@
 <template>
-  <div
-    class="card"
-    @click="() => handleClick(this.uuid, this.ip)"
-  >
-    <font-awesome-icon
-      icon="music"
-      class="icon"
-    />
-    <h3>{{ this.displayName.substring(0,50) }} {{this.displayName.length > 50 ? '...' : ''}}</h3>
+  <div class="card">
+    <div
+      class="topBar"
+      @click="() => handleClick(this.uuid, this.ip)"
+    >
+      <font-awesome-icon
+        icon="music"
+        class="icon"
+      />
+      <h3>{{ this.displayName.substring(0,50) }} {{this.displayName.length > 50 ? '...' : ''}}</h3>
+    </div>
     <div class="bottomBar">
       <font-awesome-icon
         icon="star"
         :class="getStarStyle(tags)"
-        @click="like(tags, uuid)"
+        @click="$emit('likeEvent', {tags, uuidSound: uuid})"
       />
+      <span class="tag">
+        {{playedTimes}}
+      </span>
       <span
         class="tag"
         v-for="tag in tags"
@@ -25,27 +30,15 @@
 
 <script>
 import FirebaseRealtimeService from '../services/firebase/firebase-realtime-service';
-import LocalStorageService from '../services/local-storage/local-storage-service';
 
 export default {
   name: 'SoundCard',
-  props: ['displayName', 'uuid', 'tags', 'ip'],
+  props: ['displayName', 'uuid', 'tags', 'ip', 'likeEvent', 'playedTimes'],
   methods: {
     handleClick: async (uuid, ip) => {
       await FirebaseRealtimeService.update('RequestSoundMonitoring', uuid, ip);
     },
     getStarStyle: (tags) => (tags.includes('Like') ? 'star-gold' : 'star-gray'),
-    like: (tags, uuid) => (tags.includes('Like') ? this.removeLike(uuid) : this.setLike(uuid)),
-    setLike: (uuid) => {
-      console.log('set like');
-      const likes = LocalStorageService.getLikes();
-      LocalStorageService.saveLikes([...likes, uuid]);
-    },
-    removeLike: (uuid) => {
-      console.log('removing like');
-      const likes = LocalStorageService.getLikes();
-      LocalStorageService.saveLikes(likes.filter((like) => like !== uuid));
-    },
   },
 };
 </script>
@@ -60,7 +53,6 @@ export default {
   height: 200px;
   width: 200px;
 
-  cursor: pointer;
   margin: 10px;
 
   background-color: #404040;
@@ -69,6 +61,13 @@ export default {
     font-size: 64px;
     color: #c4c4c4;
     padding: 10px;
+  }
+  .topBar {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    cursor: pointer;
   }
 
   .bottomBar {

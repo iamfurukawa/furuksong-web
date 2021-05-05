@@ -11,6 +11,7 @@
       :filterValue="filterValue"
       :tagSelected="tagSelected"
       :ip="ip"
+      @like="like"
     />
 
   </div>
@@ -78,23 +79,48 @@ export default {
     selectTag(tag) {
       this.tagSelected = tag;
     },
+    async like({ tags, uuidSound }) {
+      const likes = LocalStorageService.getLikes();
+      const setLike = (uuid) => {
+        console.log('set like');
+        LocalStorageService.saveLikes([...likes, uuid]);
+      };
+
+      const removeLike = (uuid) => {
+        console.log('removing like');
+        LocalStorageService.saveLikes(likes.filter((like) => like !== uuid));
+      };
+
+      if (tags.includes('Like')) removeLike(uuidSound);
+      else setLike(uuidSound);
+
+      return this.loadData();
+    },
+    async reloadTags() {
+      const likes = LocalStorageService.getLikes();
+      const likesActual = [];
+      const tags = [];
+      this.audios.forEach((audio) => {
+        if (likes.includes(audio.uuid)) {
+          audio.tags = [...audio.tags, 'Like'];
+          likesActual.push(audio.uuid);
+        }
+        tags.push(...audio.tags);
+      });
+      this.selectOptions = _.sortBy(_.uniq(tags));
+      LocalStorageService.saveLikes(likesActual);
+
+      this.ip = (
+        await fetch('https://api.ipify.org?format=json').then((x) => x.json())
+      ).ip;
+    },
+    async loadData() {
+      await this.getAudios();
+      await this.reloadTags();
+    },
   },
   async created() {
-    await this.getAudios();
-
-    const likes = LocalStorageService.getLikes();
-    const tags = [];
-    this.audios.forEach((audio) => {
-      audio.tags = likes.includes(audio.uuid)
-        ? [...audio.tags, 'Like']
-        : audio.tags;
-      tags.push(...audio.tags);
-    });
-    this.selectOptions = _.uniq(tags);
-
-    this.ip = (
-      await fetch('https://api.ipify.org?format=json').then((x) => x.json())
-    ).ip;
+    await this.loadData();
   },
 };
 </script>

@@ -5,6 +5,7 @@
       placeholder="Sound name"
       v-model="search"
       @keyup="$emit('onType', $event.target.value)"
+      @focus="onFocus()"
     />
     <select
       @change="$emit('selectTag', $event.target.value)"
@@ -30,6 +31,12 @@ export default {
     return {
       search: '',
     };
+  },
+  methods: {
+    onFocus() {
+      this.search = '';
+      this.$emit('onType', '');
+    },
   },
 };
 </script>
