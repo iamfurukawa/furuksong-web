@@ -20,7 +20,7 @@ const LocalStorageService = () => {
 
   const getLikes = () => {
     const likesStr = localStorage.getItem('likes');
-    return likesStr ? JSON.parse(likesStr).likes : null;
+    return likesStr ? JSON.parse(likesStr).likes : [];
   };
 
   return {
