@@ -50,7 +50,7 @@ export default {
   flex-direction: column;
   justify-content: space-around;
 
-  height: 200px;
+  height: 250px;
   width: 200px;
 
   margin: 10px;
