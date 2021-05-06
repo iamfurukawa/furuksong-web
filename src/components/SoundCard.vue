@@ -66,6 +66,10 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
 
     cursor: pointer;
   }
@@ -76,6 +80,7 @@ export default {
     justify-content: space-around;
     flex-wrap: wrap;
     width: 100%;
+    margin-bottom: 10px;
 
     .star-gray {
       font-size: 18px;
