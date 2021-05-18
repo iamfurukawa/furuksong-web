@@ -2,7 +2,7 @@
   <div class="card">
     <div
       class="topBar"
-      @click="() => handleClick(this.uuid, this.ip)"
+      @click="() => (handleClick(this.uuid, this.ip) && $emit('showModal'))"
     >
       <font-awesome-icon
         icon="music"
@@ -30,13 +30,30 @@
 
 <script>
 import FirebaseRealtimeService from '../services/firebase/firebase-realtime-service';
+import LocalStorageService from '../services/local-storage/local-storage-service';
 
 export default {
   name: 'SoundCard',
-  props: ['displayName', 'uuid', 'tags', 'ip', 'likeEvent', 'playedTimes'],
+  props: [
+    'displayName',
+    'uuid',
+    'tags',
+    'ip',
+    'likeEvent',
+    'playedTimes',
+    'showModal',
+  ],
   methods: {
     handleClick: async (uuid, ip) => {
-      await FirebaseRealtimeService.update('RequestSoundMonitoring', uuid, ip);
+      const discordId = LocalStorageService.getDiscordId();
+      if (discordId) {
+        await FirebaseRealtimeService.update(
+          'RequestSoundMonitoring',
+          uuid,
+          ip,
+          discordId,
+        );
+      }
     },
     getStarStyle: (tags) => (tags.includes('Like') ? 'star-gold' : 'star-gray'),
   },

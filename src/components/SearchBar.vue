@@ -15,7 +15,7 @@
       <option value="todos">Todos</option>
       <option value="Like">Like</option>
       <option
-        v-for="option in this.selectOptions"
+        v-for="option in this.selectOptions.filter(val => val !== 'Like')"
         :value="option"
         :key="option"
       >{{option}}</option>

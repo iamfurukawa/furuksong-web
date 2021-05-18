@@ -23,6 +23,16 @@ const LocalStorageService = () => {
     return likesStr ? JSON.parse(likesStr).likes : [];
   };
 
+  const saveDiscordId = (discordId) => {
+    const discordStr = JSON.stringify({ discordId });
+    localStorage.setItem('discordId', discordStr);
+  };
+
+  const getDiscordId = () => {
+    const discordStr = localStorage.getItem('discordId');
+    return discordStr ? JSON.parse(discordStr).discordId : null;
+  };
+
   return {
     saveVersion,
     getVersion,
@@ -30,6 +40,8 @@ const LocalStorageService = () => {
     getSounds,
     saveLikes,
     getLikes,
+    saveDiscordId,
+    getDiscordId,
   };
 };
 
