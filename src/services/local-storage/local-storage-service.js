@@ -24,6 +24,7 @@ const LocalStorageService = () => {
   };
 
   const saveDiscordId = (discordId) => {
+    discordId = discordId.split(' ').join('¬');
     const discordStr = JSON.stringify({ discordId });
     localStorage.setItem('discordId', discordStr);
   };
